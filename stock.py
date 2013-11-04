@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import urllib
@@ -54,17 +55,7 @@ def read_qfii_data():
         qfii_data[qfii] = []
         with open(qfii_dir + qfii) as qfii_file:
             for line in qfii_file:
-                parts = line.split(' ')
-                data = QFII()
-                data.code = parts[0]
-                data.name = parts[1]
-                data.date = parts[2]
-                data.count = parts[3]
-                data.stock_num = parts[4]
-                data.a_percent = parts[5]
-                data.delta_num = parts[6]
-                data.percent = parts[7]
-                data.pre_count = parts[8]
+                data = Holding(line.decode('utf-8').strip())
                 qfii_codes.add(data.code)
                 qfii_data[qfii].append(data)
     qfii_codes = list(qfii_codes)
@@ -73,23 +64,75 @@ def read_qfii_data():
     print 'read qfii data ' + str(datetime.now())
 
 
-class QFII():
+class Holding(object):
     
-    code = ''
-    name = ''
-    date = ''
-    count = 0
-    stock_num = 0
-    a_percent = 0
-    delta_num = 0
-    percent = 0
-    pre_count = 0
-    
+    def __init__(self, line=None):
+        fmt_ok = False
+        if line is not None:
+            parts = line.split(' ')
+            if len(parts) >= 9:
+                self._code = parts[0]
+                self._name = parts[1]
+                self._date = parts[2]
+                self._count = float(parts[3])
+                self._stock_num = float(parts[4])
+                self._a_percent = float(parts[5])
+                self._delta_num = float(parts[6])
+                self._percent = float(parts[7])
+                self._pre_count = float(parts[8])
+                fmt_ok = True
+        if fmt_ok is False:
+            self._code = u''
+            self._name = u''
+            self._date = u''
+            self._count = 0.0
+            self._stock_num = 0.0
+            self._a_percent = 0.0
+            self._delta_num = 0.0
+            self._percent = 0.0
+            self._pre_count = 0.0
+
+    @property
+    def code(self):
+        return self._code
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def date(self):
+        return self._date
+
+    @property
+    def count(self):
+        return self._count
+
+    @property
+    def stock_num(self):
+        return self._stock_num
+
+    @property
+    def a_percent(self):
+        return self._a_percent
+
+    @property
+    def delta_num(self):
+        return self._delta_num
+
+    @property
+    def percent(self):
+        return self._percent
+
+    @property
+    def pre_count(self):
+        return self._pre_count
+
     def __str__(self):
         ret = ''
-        ret += '(code=' + self.code
-        ret += ',name=' + self.name
-        ret += ',date=' + self.date
+        ret += '(code=' + self.code.encode('utf-8')
+        ret += ',name=' + self.name.encode('utf-8')
+        ret += ',date=' + self.date.encode('utf-8')
         ret += ',count=' + str(self.count)
         ret += ',stock_num=' + str(self.stock_num)
         ret += ',a_percent=' + str(self.a_percent)
@@ -102,5 +145,9 @@ class QFII():
         return self.__str__()
 
 
+def History(Object):
+    pass
+
+
 if __name__ == '__main__':
-    print get_qfii_list()
+    print get_qfii_data()

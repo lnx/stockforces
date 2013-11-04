@@ -1,0 +1,6 @@
+# files
+*.pyc
+
+# directories
+/data/history/*
+
