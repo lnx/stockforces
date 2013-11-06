@@ -60,7 +60,7 @@ def read_qfii_data():
                 qfii_data[qfii].append(data)
     qfii_codes = list(qfii_codes)
     qfii_codes.sort()
-    qfii_last_udpate = os.stat(qfii_dir).st_mtime
+    qfii_last_udpate = os.path.getmtime(qfii_dir)
     print 'read qfii data ' + str(datetime.now())
 
 
