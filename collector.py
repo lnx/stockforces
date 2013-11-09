@@ -4,6 +4,7 @@
 import os
 import sys
 import math
+import time
 import urllib
 import urllib2
 import datetime
@@ -43,7 +44,8 @@ def update_history_data(thread_num=30):
     history_list = []
     for history in os.listdir('./data/history'):
         if history in codes:
-            history_list.append(history)
+            if datetime.date.today() == datetime.date.fromtimestamp(os.path.getmtime('./data/history/' + history)):
+                history_list.append(history)
         else:
             os.remove('./data/history/' + history)
     print '%s %.2f%% is updated!\n' % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), (100 * len(history_list) / float(len(codes)))), 
@@ -55,14 +57,13 @@ def download_history_data(codes):
         fp = './data/history/' + code
         success = False
         try:
-            csv_file = urllib2.urlopen(url, timeout=5)
-            csv_data = csv_file.read()
+            csv_data = urllib2.urlopen(url, timeout=10).read()
             if csv_data.startswith('Date,Open,High,Low,Close,Volume,Adj Close'):
                 with open(fp, 'w') as history:
                     history.write(csv_data)
                 success = True
         except Exception as e:
-            print '%s\n' % str(e),
+            pass
         return success
 
     for code in codes:
@@ -108,8 +109,8 @@ def download_holding_data(failure_list, category, date, quarter, page=1):
     url = 'http://vip.stock.finance.sina.com.cn/q/go.php/vComStockHold/kind/' + category + '/index.phtml?reportdate=' + date + '&quarter=' + str(quarter) + '&p=' + str(page)
     print 'downloading %s\n' % url,
     try:
-        html = urllib2.urlopen(url, timeout=5)
-        soup = BeautifulSoup(html.read().decode('GB2312'))
+        html = urllib2.urlopen(url, timeout=5).read().decode('GB2312')
+        soup = BeautifulSoup(html)
         table = soup.find(id='dataTable')
         for tr in table.find_all('tr', recursive=False):
             if not tr.has_attr('style'):
@@ -142,9 +143,9 @@ def check_holding_data():
                     total = len(f.readlines())
                     page = int(math.ceil(total / 40.0))
                     url = 'http://vip.stock.finance.sina.com.cn/q/go.php/vComStockHold/kind/' + category + '/index.phtml?reportdate=' + date + '&quarter=' + str(quarter) + '&p=' + str(page)
-                    html = urllib2.urlopen(url, timeout=5)
+                    html = urllib2.urlopen(url, timeout=5).read().decode('GB2312')
+                    soup = BeautifulSoup(html)
                     check_ok = False
-                    soup = BeautifulSoup(html.read().decode('GB2312'))
                     if soup.find('div', class_='pages').find('a', class_='page nolink', text=u'下一页') is not None:
                         check_ok = True
                     else:
@@ -166,6 +167,10 @@ class Worker(threading.Thread):
 
 
 if __name__ == '__main__':
-    update_history_data()
     # update_holding_data()
     # check_holding_data()
+    while True:
+        for i in range(3):
+            update_history_data()
+            time.sleep(600)
+        time.sleep(28800)
