@@ -3,65 +3,75 @@
 
 import os
 import urllib
-
-from datetime import datetime
-
-
-qfii_dir = './data/qfii/'
-qfii_last_udpate = 0
-
-qfii_list  = [] # example: ['2013_3', '2012_1', '2010_2']
-qfii_codes = [] # stock codes in qfii_data
-qfii_data  = {} # load all of the local data
+import datetime
 
 
-def get_qfii_list():
-    if need_update():
-        read_qfii_data()
-    return qfii_list
+categories = ('jjzc', 'qfii', 'sbzc')
+category_names = { 'jjzc' : u'基金重仓', 'qfii' : u'QFII重仓', 'sbzc' : u'社保重仓' }
+last_updates = { 'jjzc' : 0, 'holding' : 0, 'sbzc' : 0 }
+
+holding_date_cache = { 'jjzc' : [], 'qfii' : [], 'sbzc' : [] }
+holding_data_cache = { 'jjzc' : {}, 'qfii' : {}, 'sbzc' : {} }
 
 
-def get_qfii_codes():
-    if need_update():
-        read_qfii_data()
-    return qfii_codes
+def get_holding_dates(category):
+    global holding_date_cache
+    if need_update(category):
+        load_holding_data(category)
+    if category in holding_date_cache:
+        return holding_date_cache[category]
+    else:
+        return []
 
 
-def get_qfii_data():
-    if need_update():
-        read_qfii_data()
-    return qfii_data
+def get_holding_data(category, holding_date):
+    global holding_data_cache
+    if need_update(category):
+        load_holding_data(category)
+    if category in holding_data_cache and holding_date in holding_data_cache[category]:
+        return holding_data_cache[category][holding_date]
+    else:
+        return []
 
 
-def need_update():
-    update = False
-    global qfii_dir
-    global qfii_last_udpate
-    latest = os.stat(qfii_dir).st_mtime
-    if latest > qfii_last_udpate:
-        update = True
-    return update
+def need_update(category):
+    global categories
+    global last_updates
+    ret = False
+    if category in categories:
+        holding_dir = './data/' + category
+        if os.path.isdir(holding_dir):
+            if category not in last_updates:
+                last_updates[category] = 0
+            mtime = os.path.getmtime(holding_dir)
+            if mtime > last_updates[category]:
+                ret = True
+    return ret
 
 
-def read_qfii_data():
-    global qfii_dir
-    global qfii_last_udpate
-    global qfii_list
-    global qfii_codes
-    qfii_list = [qfii for qfii in os.listdir(qfii_dir) if os.path.isfile(qfii_dir + qfii)]
-    qfii_list.sort(reverse=True)
-    qfii_codes = set([])
-    for qfii in qfii_list:
-        qfii_data[qfii] = []
-        with open(qfii_dir + qfii) as qfii_file:
-            for line in qfii_file:
-                data = Holding(line.decode('utf-8').strip())
-                qfii_codes.add(data.code)
-                qfii_data[qfii].append(data)
-    qfii_codes = list(qfii_codes)
-    qfii_codes.sort()
-    qfii_last_udpate = os.path.getmtime(qfii_dir)
-    print 'read qfii data ' + str(datetime.now())
+def load_holding_data(category):
+    global categories
+    global last_updates
+    global holding_date_cache
+    global holding_data_cache
+    if category in categories:
+        if category not in holding_date_cache:
+            holding_date_cache[category] = []
+        if category not in holding_data_cache:
+            holding_data_cache[category] = {}
+        holding_dir = './data/' + category
+        if os.path.isdir(holding_dir):
+            holding_date_cache[category] = [holding_date for holding_date in os.listdir(holding_dir) if os.path.isfile(holding_dir + '/' + holding_date)]
+            holding_date_cache[category].sort(reverse=True)
+            for holding_date in holding_date_cache[category]:
+                holding_data_cache[category][holding_date] = []
+                with open(holding_dir + '/' + holding_date) as holding_file:
+                    for line in holding_file:
+                        holding_data_cache[category][holding_date].append(Holding(line.decode('utf-8').strip()))
+            last_updates[category] = os.path.getmtime(holding_dir)
+        print 'load %s data at %s\n' % (category, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+    else:
+        print '%s is not a valid category\n' % category,
 
 
 class Holding(object):
@@ -69,7 +79,7 @@ class Holding(object):
     def __init__(self, line=None):
         fmt_ok = False
         if line is not None:
-            parts = line.split(' ')
+            parts = line.split(',')
             if len(parts) >= 9:
                 self._code = parts[0]
                 self._name = parts[1]
@@ -147,7 +157,3 @@ class Holding(object):
 
 def History(Object):
     pass
-
-
-if __name__ == '__main__':
-    print get_qfii_data()

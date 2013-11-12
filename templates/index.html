@@ -3,74 +3,76 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>QFII Analysis</title>
-	<link rel="stylesheet" href="{{url_for('static', filename='css/foundation.css')}}">
-	<link rel="stylesheet" href="{{url_for('static', filename='css/normalize.css')}}">
-	<script src="js/vendor/custom.modernizr.js"></script>
+	<title>StockForces</title>
+	<link rel="stylesheet" href="{{url_for('static', filename='stylesheets/app.css')}}">
+	<script src="{{url_for('static', filename='javascripts/vendor/custom.modernizr.js')}}"></script>
 </head>
 <body>
 	<div class="row">
 		<div class="large-12 columns">
 			<br>
-			<h3>Welcome to StockForces <small class="subheader">version 0.1</small></h3>
+			<h1>Welcome to StockForces <small style="font-size: 25px;">version 0.1</small></h1>
 			<hr>
 		</div>
 	</div>
 	<div class="row">
-		<div class="large-12 columns" style="margin-top:-15px" >
-			<p><small>{{ result_num }} results (in 0.01ms)</small></p>
+		<div class="large-12 columns" style="margin-top:-15px">
+			<p><small>{{ category_names[category] }} -> {{ holding_date }} -> ( a_percent > 0, delta_num > -100 ) -> {{ result_num }} results</small></p>
+		</div>
+		<div class="large-10 columns">
 			<table>
 				<thead>
 					<tr>
-						<th width="50">代码</th>
-						<th width="100">简称</th>
-						<th width="120">截止日期</th>
-						<th width="80">家数</th>
-						<th width="150">本期持股数(万股)</th>
-						<th width="250">持股占已流通A股比例(%)</th>
-						<th width="150">同上期增减(万股)</th>
+						<th width="40">代码</th>
+						<th width="115">简称</th>
+						<th width="125">截止日期</th>
+						<th width="55">家数</th>
+						<th width="170">本期持股数(万股)</th>
+						<th width="250">占已流通A股比例(%)</th>
+						<th width="170">同上期增减(万股)</th>
 						<th width="150">持股比例(%)</th>
-						<th width="150">上期家数</th>
+						<th width="130">上期家数</th>
 					</tr>
 				</thead>
 				<tbody>
-				{% for qfii in qfii_list %}
+				{% for holding in holding_list %}
 					<tr>
-						<td>{{ qfii.code }}</td>
-						<td>{{ qfii.name }}</td>
-						<td>{{ qfii.date }}</td>
-						<td>{{ qfii.count }}</td>
-						<td>{{ qfii.stock_num }}</td>
-						<td>{{ qfii.a_percent }}</td>
-						<td>{{ qfii.delta_num }}</td>
-						<td>{{ qfii.percent }}</td>
-						<td>{{ qfii.pre_count }}</td>
+						<td>{{ holding.code }}</td>
+						<td>{{ holding.name }}</td>
+						<td>{{ holding.date }}</td>
+						<td>{{ holding.count }}</td>
+						<td>{{ holding.stock_num }}</td>
+						<td>{{ holding.a_percent }}</td>
+						<td>{{ holding.delta_num }}</td>
+						<td>{{ holding.percent }}</td>
+						<td>{{ holding.pre_count }}</td>
 					</tr>
 				{% endfor %}
 				</tbody>
 			</table>
 		</div>
+		<div class="large-2 columns">
+			<a href="#" class="stock-selector" data-dropdown="org" data-options="is_hover:true">机构持股</a>
+			<ul id="org" class="f-dropdown" data-dropdown-content>
+			{% for cur_category in category_names %}
+				<li><a href="/{{cur_category}}/{{holding_date}}">{{ category_names[cur_category] }}</a></li>
+			{% endfor %}
+			</ul>
+			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">时间选择</a>
+			<ul id="date" class="f-dropdown" data-dropdown-content>
+			{% for hd in holding_date_list %}
+				<li><a href="/{{category}}/{{hd}}">{{ hd }}</a></li>
+			{% endfor %}
+			</ul>
+		</div>
 	</div>
-	<script>document.write('<script src=' + ('__proto__' in {} ? 'js/vendor/zepto' : 'js/vendor/jquery') + '.js><\/script>');</script>
-	<script src="js/foundation.min.js"></script>
-	<!--
-		<script src="js/foundation/foundation.js"></script>
-		<script src="js/foundation/foundation.alerts.js"></script>
-		<script src="js/foundation/foundation.clearing.js"></script>
-		<script src="js/foundation/foundation.cookie.js"></script>
-		<script src="js/foundation/foundation.dropdown.js"></script>
-		<script src="js/foundation/foundation.forms.js"></script>
-		<script src="js/foundation/foundation.joyride.js"></script>
-		<script src="js/foundation/foundation.magellan.js"></script>
-		<script src="js/foundation/foundation.orbit.js"></script>
-		<script src="js/foundation/foundation.reveal.js"></script>
-		<script src="js/foundation/foundation.section.js"></script>
-		<script src="js/foundation/foundation.tooltips.js"></script>
-		<script src="js/foundation/foundation.topbar.js"></script>
-		<script src="js/foundation/foundation.interchange.js"></script>
-		<script src="js/foundation/foundation.placeholder.js"></script>
-		<script src="js/foundation/foundation.abide.js"></script>
-	-->
-	<script>$(document).foundation();</script>
+	<script>
+		document.write("<script src=" + ("__proto__" in {} ? "{{url_for('static', filename='javascripts/vendor/zepto.js')}}" : "{{url_for('static', filename='javascripts/vendor/jquery.js')}}") + "><\/script>");
+	</script>
+	<script src="{{url_for('static', filename='javascripts/foundation/foundation.js')}}"></script>
+	<script src="{{url_for('static', filename='javascripts/foundation/foundation.dropdown.js')}}"></script>
+	<script>
+		$(document).foundation();
+	</script>
 </body>
 </html>
