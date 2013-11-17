@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>StockForces</title>
+	<title>重仓持股分析</title>
 	<link rel="stylesheet" href="{{url_for('static', filename='stylesheets/app.css')}}">
 	<script src="{{url_for('static', filename='javascripts/vendor/custom.modernizr.js')}}"></script>
 </head>
@@ -11,33 +11,33 @@
 	<div class="row">
 		<div class="large-12 columns">
 			<br>
-			<h1>Welcome to StockForces <small style="font-size: 25px;">version 0.1</small></h1>
+			<h2><a href="/" style="color: white;">重仓持股分析</a></h2>
 			<hr>
 		</div>
 	</div>
 	<div class="row">
 		<div class="large-12 columns" style="margin-top:-15px">
-			<p><small>{{ category_names[category] }} -> {{ holding_date }} -> ( a_percent > 0, delta_num > -100 ) -> {{ result_num }} results</small></p>
+			<p><small class="info">{{ category_names[category] }} -> {{ holding_date }} -> ( 流通比例 > {{a}}, 上期增减 > {{d}} ) -> {{ result_num }}结果</small></p>
 		</div>
-		<div class="large-10 columns">
+		<div class="large-10 columns" style="min-height: 300px;">
 			<table>
 				<thead>
 					<tr>
-						<th width="40">代码</th>
-						<th width="115">简称</th>
-						<th width="125">截止日期</th>
-						<th width="55">家数</th>
-						<th width="170">本期持股数(万股)</th>
-						<th width="250">占已流通A股比例(%)</th>
-						<th width="170">同上期增减(万股)</th>
-						<th width="150">持股比例(%)</th>
-						<th width="130">上期家数</th>
+						<th>代码</th>
+						<th>简称</th>
+						<th>截止日期</th>
+						<th>家数</th>
+						<th>本期持股数(万股)</th>
+						<th>占已流通A股比例(%)</th>
+						<th>同上期增减(万股)</th>
+						<th>持股比例(%)</th>
+						<th>上期家数</th>
 					</tr>
 				</thead>
 				<tbody>
 				{% for holding in holding_list %}
 					<tr>
-						<td>{{ holding.code }}</td>
+						<td><a href="/trend/{{ holding.code }}/{{ holding.name }}" style="color: white; text-decoration: underline;">{{ holding.code }}</a></td>
 						<td>{{ holding.name }}</td>
 						<td>{{ holding.date }}</td>
 						<td>{{ holding.count }}</td>
@@ -64,6 +64,23 @@
 				<li><a href="/{{category}}/{{hd}}">{{ hd }}</a></li>
 			{% endfor %}
 			</ul>
+		</div>
+		<form id="search" action="/{{category}}/{{holding_date}}">
+			<div class="large-2 columns">
+				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="占已流通A股比例" />
+				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="同上期增减" />
+			</div>
+		</form>
+		<div class="large-2 columns">
+			<a href="javascript:$('#search').submit();" class="stock-button">筛选</a>
+		</div>
+	</div>
+	<div class="row">
+		<div class="large-12 columns" style="margin-top: -20px;">
+			<hr>
+		</div>
+		<div class="large-12 columns" style="height: 75px; margin-top: -15px;">
+			<p><small>© 2013 all rights reserved</small></p>
 		</div>
 	</div>
 	<script>

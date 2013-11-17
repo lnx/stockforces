@@ -467,7 +467,7 @@ button.large, .button.large {
   border-color: #333333 transparent transparent transparent;
 }
 
-/* line 1347, ../sass/_settings.scss */
+/* line 1350, ../sass/_settings.scss */
 .stock-selector {
   border-style: solid;
   border-width: 1px;
@@ -494,6 +494,7 @@ button.large, .button.large {
   background-color: #333;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+  width: 135px;
 }
 /* line 122, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_buttons.scss */
 .stock-selector:hover, .stock-selector:focus {
@@ -523,6 +524,52 @@ button.large, .button.large {
 /* line 100, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_dropdown-buttons.scss */
 .stock-selector:before {
   border-color: white transparent transparent transparent;
+}
+
+/* line 1370, ../sass/_settings.scss */
+.stock-sieve {
+  width: 135px;
+  text-align: center;
+}
+
+/* line 1375, ../sass/_settings.scss */
+::-webkit-input-placeholder {
+  color: white;
+}
+
+/* line 1379, ../sass/_settings.scss */
+[placeholder]:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+/* line 1384, ../sass/_settings.scss */
+.stock-button {
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: normal;
+  margin: 0 0 1.25em;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  padding-top: 0.9em;
+  padding-right: 1.8em;
+  padding-bottom: 0.9625em;
+  padding-left: 1.8em;
+  font-size: 0.775em;
+  padding-top: 0.9em;
+  padding-bottom: 0.9625em;
+  padding-right: 0;
+  padding-left: 0;
+  width: 100%;
+}
+
+/* line 1390, ../sass/_settings.scss */
+.info {
+  color: #C6E2FF;
 }
 
 /* normalize.css v2.1.2 | MIT License | git.io/normalize */
@@ -3460,17 +3507,17 @@ textarea {
   -webkit-appearance: none;
   -webkit-border-radius: 0;
   border-radius: 0;
-  background-color: white;
+  background-color: #333333;
   font-family: inherit;
-  border: 1px solid #cccccc;
+  border: 1px solid #2284a1;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.75);
+  color: white;
   display: block;
-  font-size: 0.875em;
+  font-size: 0.8em;
   margin: 0 0 1em 0;
   padding: 0.5em;
-  height: 2.3125em;
+  height: 2.2375em;
   width: 100%;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -3494,10 +3541,10 @@ input[type="tel"]:focus,
 input[type="time"]:focus,
 input[type="url"]:focus,
 textarea:focus {
-  -webkit-box-shadow: 0 0 5px #999999;
-  -moz-box-shadow: 0 0 5px #999999;
-  box-shadow: 0 0 5px #999999;
-  border-color: #999999;
+  -webkit-box-shadow: 0 0 5px #2284a1;
+  -moz-box-shadow: 0 0 5px #2284a1;
+  box-shadow: 0 0 5px #2284a1;
+  border-color: #2284a1;
 }
 /* line 113, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
 input[type="text"]:focus,
@@ -3514,8 +3561,8 @@ input[type="tel"]:focus,
 input[type="time"]:focus,
 input[type="url"]:focus,
 textarea:focus {
-  background: #fafafa;
-  border-color: #999999;
+  background: #333333;
+  border-color: #2284a1;
   outline: none;
 }
 /* line 120, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
@@ -3608,8 +3655,8 @@ span.error, small.error {
 .error input:focus,
 .error textarea:focus,
 .error select:focus {
-  background: #fafafa;
-  border-color: #999999;
+  background: #333333;
+  border-color: #2284a1;
 }
 /* line 383, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
 .error label,
@@ -3643,8 +3690,8 @@ textarea.error {
 /* line 236, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
 input.error:focus,
 textarea.error:focus {
-  background: #fafafa;
-  border-color: #999999;
+  background: #333333;
+  border-color: #2284a1;
 }
 
 /* line 403, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
@@ -3654,8 +3701,8 @@ textarea.error:focus {
 }
 /* line 236, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
 .error select:focus {
-  background: #fafafa;
-  border-color: #999999;
+  background: #333333;
+  border-color: #2284a1;
 }
 
 /* line 407, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
@@ -6695,7 +6742,7 @@ form.custom .custom.dropdown .current {
   cursor: default;
   white-space: nowrap;
   line-height: 2.25em;
-  color: rgba(0, 0, 0, 0.75);
+  color: white;
   text-decoration: none;
   overflow: hidden;
   display: block;
@@ -6806,8 +6853,8 @@ form.custom .error .custom.dropdown {
 }
 /* line 236, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_forms.scss */
 form.custom .error .custom.dropdown:focus {
-  background: #fafafa;
-  border-color: #999999;
+  background: #333333;
+  border-color: #2284a1;
 }
 /* line 222, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_custom-forms.scss */
 form.custom .error .custom.dropdown + small.error {
@@ -7724,7 +7771,7 @@ a.th {
   font-size: 16px;
   z-index: 99;
   margin-top: 2px;
-  max-width: 200px;
+  max-width: 135px;
 }
 /* line 50, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_dropdown.scss */
 .f-dropdown > *:first-child {
@@ -7774,7 +7821,7 @@ a.th {
 }
 /* line 139, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_dropdown.scss */
 .f-dropdown li {
-  font-size: 0.75em;
+  font-size: 0.8em;
   cursor: pointer;
   line-height: 1.125em;
   margin: 0;
@@ -7803,7 +7850,7 @@ a.th {
   border: solid 1px #cccccc;
   font-size: 16px;
   z-index: 99;
-  max-width: 200px;
+  max-width: 135px;
 }
 /* line 50, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_dropdown.scss */
 .f-dropdown.content > *:first-child {
