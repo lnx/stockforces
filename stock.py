@@ -8,7 +8,6 @@ import datetime
 
 categories = ('jjzc', 'qfii', 'sbzc')
 category_names = { 'jjzc' : u'基金重仓', 'qfii' : u'QFII重仓', 'sbzc' : u'社保重仓' }
-last_updates = { 'jjzc' : 0, 'holding' : 0, 'sbzc' : 0 }
 
 holding_date_cache = { 'jjzc' : [], 'qfii' : [], 'sbzc' : [] }
 holding_data_cache = { 'jjzc' : {}, 'qfii' : {}, 'sbzc' : {} }
@@ -16,8 +15,6 @@ holding_data_cache = { 'jjzc' : {}, 'qfii' : {}, 'sbzc' : {} }
 
 def get_holding_dates(category):
     global holding_date_cache
-    if need_update(category):
-        load_holding_data(category)
     if category in holding_date_cache:
         return holding_date_cache[category]
     else:
@@ -26,32 +23,14 @@ def get_holding_dates(category):
 
 def get_holding_data(category, holding_date):
     global holding_data_cache
-    if need_update(category):
-        load_holding_data(category)
     if category in holding_data_cache and holding_date in holding_data_cache[category]:
         return holding_data_cache[category][holding_date]
     else:
         return []
 
 
-def need_update(category):
-    global categories
-    global last_updates
-    ret = False
-    if category in categories:
-        holding_dir = './data/' + category
-        if os.path.isdir(holding_dir):
-            if category not in last_updates:
-                last_updates[category] = 0
-            mtime = os.path.getmtime(holding_dir)
-            if mtime > last_updates[category]:
-                ret = True
-    return ret
-
-
 def load_holding_data(category):
     global categories
-    global last_updates
     global holding_date_cache
     global holding_data_cache
     if category in categories:
@@ -68,7 +47,6 @@ def load_holding_data(category):
                 with open(holding_dir + '/' + holding_date) as holding_file:
                     for line in holding_file:
                         holding_data_cache[category][holding_date].append(Holding(line.decode('utf-8').strip()))
-            last_updates[category] = os.path.getmtime(holding_dir)
         print 'load %s data at %s\n' % (category, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
     else:
         print '%s is not a valid category\n' % category,

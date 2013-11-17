@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" >
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>重仓持股分析</title>
+	<link rel="stylesheet" href="{{url_for('static', filename='stylesheets/app.css')}}">
+	<script src="{{url_for('static', filename='javascripts/vendor/custom.modernizr.js')}}"></script>
+</head>
+<body>
+	<div class="row">
+		<div class="large-12 columns">
+			<br>
+			<h2><a href="/" style="color: white;">重仓持股分析</a></h2>
+			<hr>
+		</div>
+	</div>
+	<div class="row">
+		<div class="large-12 columns" style="margin-top:-15px">
+			<p><small class="info">{{ name }} [{{ code }}]</small></p>
+		</div>
+	</div>
+	<div class="row">
+		<div id="history" class="large-12 columns" style="height: 500px; min-width: 500px"></div>
+	</div>
+	<div class="row">
+		<div class="large-12 columns">
+			<hr>
+		</div>
+		<div class="large-12 columns" style="height: 75px; margin-top: -15px;">
+			<p><small>© 2013 all rights reserved</small></p>
+		</div>
+	</div>
+	<script>
+		document.write("<script src=" + ("__proto__" in {} ? "{{url_for('static', filename='javascripts/vendor/zepto.js')}}" : "{{url_for('static', filename='javascripts/vendor/jquery.js')}}") + "><\/script>");
+	</script>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="{{url_for('static', filename='javascripts/highstock/highstock.js')}}"></script>
+	<script src="{{url_for('static', filename='javascripts/highstock/themes/gray.js')}}"></script>
+	<script>
+		$(function() {
+			$.getJSON('/history/{{ code }}', function(history) {
+				// split the data set into ohlc and volume
+				var ohlc = [],
+				    volume = [],
+				    data = history['history'],
+				    dataLength = data.length;
+				for (i = 0; i < dataLength; i++) {
+					ohlc.push([
+						data[i][0], // the date
+						data[i][1], // open
+						data[i][2], // high
+						data[i][3], // low
+						data[i][4]  // close
+					]);
+					volume.push([
+						data[i][0], // date
+						data[i][5]  // volume
+					])
+				}
+				// set the allowed units for data grouping
+				var groupingUnits = [[
+					'week', // unit name
+					[1]     // allowed multiples
+				], [
+					'month',
+					[1, 2, 3, 4, 6]
+				]];
+				// create the chart
+				$('#history').highcharts('StockChart', {
+				    rangeSelector: {
+				        selected: 1
+				    },
+				    title: {
+				        text: '{{ name }} [{{ code }}]'
+				    },
+				    yAxis: [{
+				        title: {
+				            text: 'OHLC'
+				        },
+				        height: 200,
+				        lineWidth: 2
+				    }, {
+				        title: {
+				            text: 'Volume'
+				        },
+				        top: 300,
+				        height: 100,
+				        offset: 0,
+				        lineWidth: 2
+				    }],
+				    series: [{
+				        type: 'candlestick',
+				        name: '{{ name }} [{{ code }}]',
+				        data: ohlc,
+				        dataGrouping: {
+							units: groupingUnits
+				        }
+				    }, {
+				        type: 'column',
+				        name: 'Volume',
+				        data: volume,
+				        yAxis: 1,
+				        dataGrouping: {
+							units: groupingUnits
+				        }
+				    }]
+				});
+			});
+			$.getJSON('/current/{{ code }}', function(current) {
+				var data = current['current'];
+				var text = '{{name}} [{{code}}] 今开='+data[1]+' 昨收='+data[2]+' 当前='+data[3]+' 最高='+data[4]+' 最低='+data[5]+' 成交量='+data[8]+' 成交额='+data[9]+' 时间='+data[30]+' '+data[31];
+				$('.info').html(text);
+			});
+		});
+	</script>
+</body>
+</html>
