@@ -3,4 +3,5 @@
 
 # directories
 /data/history/*
+/static/.sass-cache/*
 
