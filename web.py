@@ -109,4 +109,4 @@ def get_current_data(code):
 if __name__ == '__main__':
 	for category in stock.categories:
 		stock.load_holding_data(category)
-	app.run(debug=True)
+	app.run()
