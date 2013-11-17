@@ -68,11 +68,7 @@ def download_history_data(codes):
 
     for code in codes:
         if len(code) == 6:
-            url = 'http://table.finance.yahoo.com/table.csv?s='
-            if int(code[0]) >= 6:
-                url += code + '.ss'
-            else:
-                url += code + '.sz'
+            url = 'http://table.finance.yahoo.com/table.csv?s=' + (code + '.ss') if int(code[0]) >= 6 else (code + '.sz')
             print 'downloading %s %s\n' % (url, 'success' if download(url, code) else 'failure'),
 
 
