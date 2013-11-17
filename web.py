@@ -37,14 +37,14 @@ def index():
 @app.route('/<category>/<holding_date>', methods=['GET', 'POST'])
 def holdings(category='', holding_date=''):
 	a = ''
-	d = ''
+	p = ''
 	if request.method == 'GET':
 		try:
 			a = float(request.args.get('a'))
 		except Exception, e:
 			pass
 		try:
-			d = float(request.args.get('d'))
+			p = float(request.args.get('p'))
 		except Exception, e:
 			pass
 	elif request.method == "POST":
@@ -53,7 +53,7 @@ def holdings(category='', holding_date=''):
 		except Exception, e:
 			pass
 		try:
-			d = float(request.form['d'])
+			p = float(request.form['p'])
 		except Exception, e:
 			pass
 	category_names = stock.category_names
@@ -61,9 +61,9 @@ def holdings(category='', holding_date=''):
 	holding_list = stock.get_holding_data(category, holding_date)
 	if a is not '':
 		holding_list = [holding for holding in holding_list if holding.a_percent >= a]
-	if d is not '':
-		holding_list = [holding for holding in holding_list if holding.delta_num >= d]
-	return render_template('index.html', a=a, d=d, category=category, category_names=category_names, holding_date=holding_date, holding_date_list=holding_date_list, result_num=len(holding_list), holding_list=holding_list)
+	if p is not '':
+		holding_list = [holding for holding in holding_list if holding.percent >= p]
+	return render_template('index.html', a=a, p=p, category=category, category_names=category_names, holding_date=holding_date, holding_date_list=holding_date_list, result_num=len(holding_list), holding_list=holding_list)
 
 
 @app.route('/trend/<code>/<name>')
@@ -109,4 +109,4 @@ def get_current_data(code):
 if __name__ == '__main__':
 	for category in stock.categories:
 		stock.load_holding_data(category)
-	app.run()
+	app.run(debug=True)

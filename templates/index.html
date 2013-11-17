@@ -17,7 +17,7 @@
 	</div>
 	<div class="row">
 		<div class="large-12 columns" style="margin-top:-15px">
-			<p><small class="info">{{ category_names[category] }} -> {{ holding_date }} -> ( 流通比例 > {{a}}, 上期增减 > {{d}} ) -> {{ result_num }}结果</small></p>
+			<p><small class="info">{{ category_names[category] }} -> {{ holding_date }} -> ( 流通比例 > {{a}}, 持股比例 > {{p}} ) -> {{ result_num }}结果</small></p>
 		</div>
 		<div class="large-10 columns" style="min-height: 300px;">
 			<table>
@@ -68,7 +68,7 @@
 		<form id="search" action="/{{category}}/{{holding_date}}">
 			<div class="large-2 columns">
 				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="占已流通A股比例" />
-				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="同上期增减" />
+				<input name="p" value="{{p}}" type="text" class="stock-sieve" placeholder="持股比例" />
 			</div>
 		</form>
 		<div class="large-2 columns">
