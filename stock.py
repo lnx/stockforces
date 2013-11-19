@@ -2,8 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-import urllib
+import re
+import time
+import urllib2
 import datetime
+
+from bs4 import BeautifulSoup
 
 
 categories = ('jjzc', 'qfii', 'sbzc')
@@ -50,6 +54,97 @@ def load_holding_data(category):
         print 'load %s data at %s\n' % (category, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
     else:
         print '%s is not a valid category\n' % category,
+
+
+def get_current_data(code):
+    current_data = []
+    if len(code) == 6:
+        url = 'http://hq.sinajs.cn/list=' + ('sh' + code) if int(code[0]) >= 6 else ('sz' + code)
+        try:
+            response = urllib2.urlopen(url, timeout=3).read().decode('GB2312')
+            soup = BeautifulSoup(response)
+            matches = re.findall(r'\"(.+?)\"', soup.string)
+            current_data = ','.join(matches).split(',')
+        except Exception, e:
+            print e
+    return current_data
+
+
+def get_history_data(code):
+    history_data = []
+    history_path = './data/history/' + code
+    if os.path.isfile(history_path):
+        with open(history_path) as history_file:
+            lines = [line for line in history_file]
+            for line in lines[1:]:
+                data = line.strip().split(',')
+                try:
+                    data[0] = time.mktime(datetime.datetime.strptime(data[0], '%Y-%m-%d').timetuple()) * 1000
+                    for i in range(1, len(data), 1):
+                        data[i] = float(data[i])
+                    history_data.append(data)
+                except Exception, e:
+                    print e
+    history_data.reverse()
+    return history_data
+
+
+def get_season_data(code):
+    season_data = []
+    history_path = './data/history/' + code
+    if os.path.isfile(history_path):
+        with open(history_path) as history_file:
+            lines = [line for line in history_file]
+            pre_month = -1
+            for line in lines[1:]:
+                data = line.split(',')
+                try:
+                    data[0] = datetime.datetime.strptime(data[0], '%Y-%m-%d')
+                    if data[0].month in (12, 9, 6, 3) and data[0].month is not pre_month:
+                        for i in range(1, len(data), 1):
+                            data[i] = float(data[i])
+                        season_data.append(data)
+                        pre_month = data[0].month
+                except Exception, e:
+                    print e
+    return season_data
+
+
+def get_season_increase(code):
+    def get_season(input_datetime):
+        if isinstance(input_datetime, datetime.datetime):
+            if input_datetime.month in (1, 2, 3):
+                return str(input_datetime.year) + '-1'
+            elif input_datetime.month in (4, 5, 6):
+                return str(input_datetime.year) + '-2'
+            elif input_datetime.month in (7, 8, 9):
+                return str(input_datetime.year) + '-3'
+            elif input_datetime.month in (10, 11, 12):
+                return str(input_datetime.year) + '-4'
+        else:
+            return input_datetime
+    season_increase = []
+    season_data = get_season_data(code)
+    for i in range(len(season_data)):
+        data = season_data[i]
+        season = get_season(data[0])
+        increase = '0'
+        if i < len(season_data) - 1:
+            next_data = season_data[i + 1]
+            adj_close_index = 6
+            if next_data[adj_close_index] > 0:
+                increase = ('%+.2f' % (100 * (data[adj_close_index] - next_data[adj_close_index]) / next_data[adj_close_index]))
+            else:
+                if data[adj_close_index] > 0:
+                    increase = '+∞'
+                elif data[adj_close_index] == 0:
+                    increase = '0'
+                elif data[adj_close_index] < 0:
+                    increase = '-∞'
+        else:
+            increase = 'none'
+        season_increase.append((season, data[adj_close_index], increase))
+    return season_increase
 
 
 class Holding(object):
@@ -133,5 +228,5 @@ class Holding(object):
         return self.__str__()
 
 
-def History(Object):
-    pass
+if __name__ == '__main__':
+    print get_season_increase('000002')

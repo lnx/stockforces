@@ -21,6 +21,38 @@
 		</div>
 	</div>
 	<div class="row">
+		<div class="large-12 columns">
+			<table>
+				<thead>
+					<tr>
+						<th>季度</th>
+					{% for increase in season_increase[:16] %}
+						<th style="text-align: right;">{{ increase[0] }}</th>
+					{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>价格</td>
+					{% for increase in season_increase[:16] %}
+						<td style="text-align: right;">{{ increase[1] }}</td>
+					{% endfor %}
+					</tr>
+					<tr>
+						<td>涨幅(%)</td>
+					{% for increase in season_increase[:16] %}
+					{% if '+' in increase[2] %}
+						<td style="text-align: right; color: red;">{{ increase[2] }}</td>
+					{% else %}
+						<td style="text-align: right;">{{ increase[2] }}</td>
+					{% endif%}
+					{% endfor %}
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
 		<div id="history" class="large-12 columns" style="height: 500px; min-width: 500px"></div>
 	</div>
 	<div class="row">
@@ -109,8 +141,10 @@
 			});
 			$.getJSON('/current/{{ code }}', function(current) {
 				var data = current['current'];
-				var text = '{{name}} [{{code}}] 今开='+data[1]+' 昨收='+data[2]+' 当前='+data[3]+' 最高='+data[4]+' 最低='+data[5]+' 成交量='+data[8]+' 成交额='+data[9]+' 时间='+data[30]+' '+data[31];
-				$('.info').html(text);
+				if (data.length > 31) {
+					var text = '{{name}} [{{code}}] 今开='+data[1]+' 昨收='+data[2]+' 当前='+data[3]+' 最高='+data[4]+' 最低='+data[5]+' 成交量='+data[8]+' 成交额='+data[9]+' 时间='+data[30]+' '+data[31];
+					$('.info').html(text);
+				}
 			});
 		});
 	</script>
