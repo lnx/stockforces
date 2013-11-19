@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-import sys
 import math
 import time
-import urllib
 import urllib2
 import datetime
 import threading
@@ -62,8 +60,8 @@ def download_history_data(codes):
                 with open(fp, 'w') as history:
                     history.write(csv_data)
                 success = True
-        except Exception as e:
-            pass
+        except Exception, e:
+            print e
         return success
 
     for code in codes:
