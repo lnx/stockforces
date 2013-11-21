@@ -11,13 +11,13 @@
 	<div class="row">
 		<div class="large-12 columns">
 			<br>
-			<h2><a href="/" style="color: white;">重仓持股分析</a></h2>
+			<h2><a href="/" style="color: white;">重仓持股分析<small style="font-size: 0.6em;"> - 高级筛选</small></a></h2>
 			<hr>
 		</div>
 	</div>
 	<div class="row">
 		<div class="large-12 columns" style="margin-top:-15px">
-			<p><small class="info">{{ category_names[category] }} | {{ holding_date }} | 流通比例 > {{a}} | 同上期增减比例 > {{d}} | {{ result_num }}结果</small></p>
+			<p><small class="info">2013_3 | 基金A股比例 | 基金增减比例 | 社保A股比例 | 社保增减比例 | QFII A股比例 | QFII增减比例 | 168结果</small></p>
 		</div>
 		<div class="large-10 columns" style="min-height: 300px;">
 			<table>
@@ -25,7 +25,7 @@
 					<tr>
 						<th>代码</th>
 						<th>简称</th>
-						<th>截止日期</th>
+						<th>类别</th>
 						<th>家数</th>
 						<th>本期持股数(万股)</th>
 						<th width="80px">占已流通A股比例(%)</th>
@@ -36,46 +36,29 @@
 					</tr>
 				</thead>
 				<tbody>
-				{% for holding in holding_list %}
-					<tr>
-						<td><a href="/trend/{{ holding.code }}/{{ holding.name }}" style="color: white; text-decoration: underline;">{{ holding.code }}</a></td>
-						<td>{{ holding.name }}</td>
-						<td>{{ holding.date }}</td>
-						<td>{{ holding.count }}</td>
-						<td>{{ holding.stock_num }}</td>
-						<td>{{ holding.a_percent }}</td>
-						<td>{{ holding.delta_num }}</td>
-						<td>{{ holding.percent }}</td>
-						<td>{{ holding.pre_count }}</td>
-						<td>{{ holding.delta_num_percent }}</td>
-					</tr>
-				{% endfor %}
 				</tbody>
 			</table>
 		</div>
 		<div class="large-2 columns">
-			<a href="#" class="stock-selector" data-dropdown="org" data-options="is_hover:true">机构持股</a>
-			<ul id="org" class="f-dropdown" data-dropdown-content>
-			{% for cur_category in category_names %}
-				<li><a href="/{{cur_category}}/{{holding_date}}">{{ category_names[cur_category] }}</a></li>
-			{% endfor %}
-			</ul>
 			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">时间选择</a>
 			<ul id="date" class="f-dropdown" data-dropdown-content>
-			{% for hd in holding_date_list %}
-				<li><a href="/{{category}}/{{hd}}">{{ hd }}</a></li>
-			{% endfor %}
+				<li><a href="/advance/2013_3">2013_3</a></li>
+				<li><a href="/advance/2013_2">2013_2</a></li>
+				<li><a href="/advance/2013_1">2013_1</a></li>
 			</ul>
 		</div>
 		<form id="search" action="/{{category}}/{{holding_date}}">
 			<div class="large-2 columns">
-				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="占已流通A股比例" />
-				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="同上期增减比例" />
+				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="基金A股比例" />
+				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="基金增减比例" />
+				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="社保A股比例" />
+				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="社保增减比例" />
+				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="QFII A股比例" />
+				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="QFII增减比例" />
 			</div>
 		</form>
 		<div class="large-2 columns">
-			<a href="javascript:$('#search').submit();" class="stock-button">筛选</a>
-			<a href="/advance" class="stock-button">高级</a>
+			<a href="#" class="stock-button">筛选</a>
 		</div>
 	</div>
 	<div class="row">

@@ -492,9 +492,10 @@ button.large, .button.large {
   padding-right: 3.1875em;
   font-size: 0.8em;
   background-color: #333;
+  width: 135px;
+  height: 29px;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  width: 135px;
 }
 /* line 122, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_buttons.scss */
 .stock-selector:hover, .stock-selector:focus {
@@ -526,9 +527,8 @@ button.large, .button.large {
   border-color: white transparent transparent transparent;
 }
 
-/* line 1370, ../sass/_settings.scss */
+/* line 1371, ../sass/_settings.scss */
 .stock-sieve {
-  width: 135px;
   text-align: center;
 }
 
@@ -565,9 +565,13 @@ button.large, .button.large {
   padding-right: 0;
   padding-left: 0;
   width: 100%;
+  width: 135px;
+  height: 29px;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
-/* line 1390, ../sass/_settings.scss */
+/* line 1394, ../sass/_settings.scss */
 .info {
   color: #2ba6cb;
 }

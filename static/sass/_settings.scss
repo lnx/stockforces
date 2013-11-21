@@ -1352,9 +1352,10 @@ $table-head-font-color: #fff;
 	@include dropdown-button;
   font-size: 0.8em;
   background-color: #333;
+  width: 135px;
+  height: 29px;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  width: 135px;
 }
 $f-dropdown-font-size: 0.8em;
 $f-dropdown-max-width: 135px;
@@ -1368,7 +1369,6 @@ $input-focus-bg-color: #333;
 $input-focus-border-color: #2284a1;
 
 .stock-sieve {
-  width: 135px;
   text-align: center;
 }
 
@@ -1384,6 +1384,10 @@ $input-focus-border-color: #2284a1;
 .stock-button {
   @include button-base;
   @include button-size(0.9em, 135px);
+  width: 135px;
+  height: 29px;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 // info

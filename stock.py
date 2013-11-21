@@ -154,16 +154,24 @@ class Holding(object):
         if line is not None:
             parts = line.split(',')
             if len(parts) >= 9:
-                self._code = parts[0]
-                self._name = parts[1]
-                self._date = parts[2]
-                self._count = float(parts[3])
-                self._stock_num = float(parts[4])
-                self._a_percent = float(parts[5])
-                self._delta_num = float(parts[6])
-                self._percent = float(parts[7])
-                self._pre_count = float(parts[8])
-                fmt_ok = True
+                try:
+                    self._code = parts[0]
+                    self._name = parts[1]
+                    self._date = parts[2]
+                    self._count = float(parts[3])
+                    self._stock_num = float(parts[4])
+                    self._a_percent = float(parts[5])
+                    self._delta_num = float(parts[6])
+                    self._percent = float(parts[7])
+                    self._pre_count = float(parts[8])
+                    pre_stock_num = self.stock_num - self.delta_num
+                    if pre_stock_num > 0:
+                        self._delta_num_percent = '%.2f' % (self.delta_num / pre_stock_num)
+                    else:
+                        self._delta_num_percent = u'新进'
+                    fmt_ok = True
+                except Exception, e:
+                    print e
         if fmt_ok is False:
             self._code = u''
             self._name = u''
@@ -174,6 +182,7 @@ class Holding(object):
             self._delta_num = 0.0
             self._percent = 0.0
             self._pre_count = 0.0
+            self._delta_num_percent = u'新进'
 
     @property
     def code(self):
@@ -210,6 +219,10 @@ class Holding(object):
     @property
     def pre_count(self):
         return self._pre_count
+
+    @property
+    def delta_num_percent(self):
+        return self._delta_num_percent
 
     def __str__(self):
         ret = ''
