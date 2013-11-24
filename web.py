@@ -17,46 +17,39 @@ app = Flask(__name__)
 @app.route('/')
 def index():
 	holding_list = []
-	if len(stock.categories):
+	if len(stock.categories) > 0:
 		category = stock.categories[0]
-		category_names = stock.category_names
 		if category in stock.holding_date_cache and len(stock.holding_date_cache[category]) > 0:
+			holding_dates = stock.holding_date_cache[category]
 			holding_date = stock.holding_date_cache[category][0]
-			holding_date_list = stock.holding_date_cache[category]
 			holding_list = stock.get_holding_data(category, holding_date)
-	return render_template('index.html', a='', d='', category=category, category_names=category_names, holding_date=holding_date, holding_date_list=holding_date_list, result_num=len(holding_list), holding_list=holding_list)
+	return render_template(
+		'index.html',
+		category_names=stock.category_names,
+		category=category,
+		holding_date=holding_date,
+		holding_dates=holding_dates,
+		a='',
+		d='',
+		holding_list=holding_list,
+		)
 
 
-@app.route('/<category>/<holding_date>', methods=['GET', 'POST'])
+@app.route('/holding/<category>/<holding_date>')
 def holdings(category='', holding_date=''):
-	a = ''
-	d = ''
-	if request.method == 'GET':
-		try:
-			a = float(request.args.get('a'))
-		except Exception, e:
-			print e
-		try:
-			d = float(request.args.get('d'))
-		except Exception, e:
-			print e
-	elif request.method == "POST":
-		try:
-			a = float(request.form['a'])
-		except Exception, e:
-			print e
-		try:
-			d = float(request.form['d'])
-		except Exception, e:
-			print e
-	category_names = stock.category_names
-	holding_date_list = stock.holding_date_cache[category]
-	holding_list = stock.get_holding_data(category, holding_date)
-	if a is not '':
-		holding_list = [holding for holding in holding_list if holding.a_percent >= a]
-	if d is not '':
-		holding_list = [holding for holding in holding_list if holding.delta_num_percent == u'新进' or float(holding.delta_num_percent) >= d]
-	return render_template('index.html', a=a, d=d, category=category, category_names=category_names, holding_date=holding_date, holding_date_list=holding_date_list, result_num=len(holding_list), holding_list=holding_list)
+	a, d = parse_request('a', 'd')
+	holding_dates = stock.holding_date_cache[category]
+	holding_list = stock.get_holding_data(category, holding_date, a, d)
+	return render_template(
+		'index.html',
+		category=category,
+		category_names=stock.category_names,
+		holding_dates=holding_dates,
+		holding_date=holding_date,
+		a=a,
+		d=d,
+		holding_list=holding_list,
+		)
 
 
 @app.route('/trend/<code>/<name>')
@@ -76,10 +69,46 @@ def history(code=''):
 
 @app.route('/advance')
 def advance():
-	return render_template('advance.html')
+	holding_dates = stock.get_holding_dates()
+	holding_date = holding_dates[0]
+	return render_template(
+		'advance.html',
+		holding_dates=holding_dates,
+		holding_date=holding_date,
+		ja='',
+		jd='',
+		sa='',
+		sd='',
+		qa='',
+		qd='',
+		)
+
+
+@app.route('/advance/<holding_date>')
+def advance_sieve(holding_date=''):
+	holding_dates = stock.get_holding_dates()
+	ja, jd, sa, sd, qa, qd = parse_request('ja', 'jd', 'sa', 'sd', 'qa', 'qd')
+	return render_template(
+		'advance.html',
+		holding_dates=holding_dates,
+		holding_date=holding_date,
+		ja=ja,
+		jd=jd,
+		sa=sa,
+		sd=sd,
+		qa=qa,
+		qd=qd,
+		)
+
+
+def parse_request(*params):
+	ret = []
+	for p in params:
+		v = request.args.get(p)
+		ret.append(v if v is not None else '')
+	return ret
 
 
 if __name__ == '__main__':
-	for category in stock.categories:
-		stock.load_holding_data(category)
+	stock.load_holding_data()
 	app.run(debug=True)

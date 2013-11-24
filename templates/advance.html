@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 	<title>重仓持股分析</title>
+	<link rel="shortcut icon" href="{{url_for('static', filename='images/sf.ico')}}">
 	<link rel="stylesheet" href="{{url_for('static', filename='stylesheets/app.css')}}">
 	<script src="{{url_for('static', filename='javascripts/vendor/custom.modernizr.js')}}"></script>
 </head>
@@ -11,13 +12,13 @@
 	<div class="row">
 		<div class="large-12 columns">
 			<br>
-			<h2><a href="/" style="color: white;">重仓持股分析<small style="font-size: 0.6em;"> - 高级筛选</small></a></h2>
+			<h3><a href="/" style="color: white;"><img width="30px" height="30px" style="margin-top: -5px;" src="{{url_for('static', filename='images/sf.png')}}" /> 重仓持股分析<small style="font-size: 0.6em;"> - 高级筛选</small></a></h3>
 			<hr>
 		</div>
 	</div>
 	<div class="row">
 		<div class="large-12 columns" style="margin-top:-15px">
-			<p><small class="info">2013_3 | 基金A股比例 | 基金增减比例 | 社保A股比例 | 社保增减比例 | QFII A股比例 | QFII增减比例 | 168结果</small></p>
+			<p><small class="info">{{ holding_date }} | 基金A股比例 > {{ ja }} | 基金增减比例 > {{ jd }} | 社保A股比例 > {{ sa }} | 社保增减比例 > {{ sd }} | QFII A股比例 > {{ qa }} | QFII增减比例 > {{ qd }} | 168结果</small></p>
 		</div>
 		<div class="large-10 columns" style="min-height: 300px;">
 			<table>
@@ -27,12 +28,12 @@
 						<th>简称</th>
 						<th>类别</th>
 						<th>家数</th>
-						<th>本期持股数(万股)</th>
-						<th width="80px">占已流通A股比例(%)</th>
-						<th>同上期增减(万股)</th>
-						<th width="90px">持股比例(%)</th>
+						<th>持股(万)</th>
+						<th>A股比例(%)</th>
+						<th>增减(万股)</th>
+						<th>持股比例(%)</th>
 						<th>上期家数</th>
-						<th width="80px">同上期增减比例(%)</th>
+						<th>增减比例(%)</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -42,23 +43,23 @@
 		<div class="large-2 columns">
 			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">时间选择</a>
 			<ul id="date" class="f-dropdown" data-dropdown-content>
-				<li><a href="/advance/2013_3">2013_3</a></li>
-				<li><a href="/advance/2013_2">2013_2</a></li>
-				<li><a href="/advance/2013_1">2013_1</a></li>
+			{% for hd in holding_dates %}
+				<li><a href="/{{category}}/{{hd}}">{{ hd }}</a></li>
+			{% endfor %}
 			</ul>
 		</div>
-		<form id="search" action="/{{category}}/{{holding_date}}">
+		<form id="sieve" action="/advance/{{holding_date}}">
 			<div class="large-2 columns">
-				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="基金A股比例" />
-				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="基金增减比例" />
-				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="社保A股比例" />
-				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="社保增减比例" />
-				<input name="a" value="{{a}}" type="text" class="stock-sieve" placeholder="QFII A股比例" />
-				<input name="d" value="{{d}}" type="text" class="stock-sieve" placeholder="QFII增减比例" />
+				<input name="ja" value="{{ja}}" type="text" class="stock-sieve" placeholder="基金A股比例" />
+				<input name="jd" value="{{jd}}" type="text" class="stock-sieve" placeholder="基金增减比例" />
+				<input name="sa" value="{{sa}}" type="text" class="stock-sieve" placeholder="社保A股比例" />
+				<input name="sd" value="{{sd}}" type="text" class="stock-sieve" placeholder="社保增减比例" />
+				<input name="qa" value="{{qa}}" type="text" class="stock-sieve" placeholder="QFII A股比例" />
+				<input name="qd" value="{{qd}}" type="text" class="stock-sieve" placeholder="QFII增减比例" />
 			</div>
 		</form>
 		<div class="large-2 columns">
-			<a href="#" class="stock-button">筛选</a>
+			<a href="javascript:$('#sieve').submit();" class="stock-button">筛选</a>
 		</div>
 	</div>
 	<div class="row">

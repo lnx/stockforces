@@ -17,27 +17,11 @@ holding_date_cache = { 'jjzc' : [], 'qfii' : [], 'sbzc' : [] }
 holding_data_cache = { 'jjzc' : {}, 'qfii' : {}, 'sbzc' : {} }
 
 
-def get_holding_dates(category):
-    global holding_date_cache
-    if category in holding_date_cache:
-        return holding_date_cache[category]
-    else:
-        return []
-
-
-def get_holding_data(category, holding_date):
-    global holding_data_cache
-    if category in holding_data_cache and holding_date in holding_data_cache[category]:
-        return holding_data_cache[category][holding_date]
-    else:
-        return []
-
-
-def load_holding_data(category):
+def load_holding_data():
     global categories
     global holding_date_cache
     global holding_data_cache
-    if category in categories:
+    for category in categories:
         if category not in holding_date_cache:
             holding_date_cache[category] = []
         if category not in holding_data_cache:
@@ -52,8 +36,35 @@ def load_holding_data(category):
                     for line in holding_file:
                         holding_data_cache[category][holding_date].append(Holding(line.decode('utf-8').strip()))
         print 'load %s data at %s\n' % (category, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+
+
+def get_holding_dates(category='all'):
+    global holding_date_cache
+    if category in holding_date_cache:
+        return holding_date_cache[category]
+    elif category == 'all':
+        dates = []
+        for key in holding_date_cache:
+            dates += holding_date_cache[key]
+        holding_dates = list(set(dates))
+        holding_dates.sort(reverse=True)
+        return holding_dates
     else:
-        print '%s is not a valid category\n' % category,
+        return []
+
+
+def get_holding_data(category, holding_date, a='', d=''):
+    global holding_data_cache
+    if category in holding_data_cache and holding_date in holding_data_cache[category]:
+        a, d = to_float(a, d)
+        holding_list = holding_data_cache[category][holding_date]
+        if a is not '':
+            holding_list = [holding for holding in holding_list if holding.a_percent >= a]
+        if d is not '':
+            holding_list = [holding for holding in holding_list if holding.delta_num_percent == u'新进' or float(holding.delta_num_percent) >= d]
+        return holding_list
+    else:
+        return []
 
 
 def get_current_data(code):
@@ -68,25 +79,6 @@ def get_current_data(code):
         except Exception, e:
             print e
     return current_data
-
-
-def get_history_data(code):
-    history_data = []
-    history_path = './data/history/' + code
-    if os.path.isfile(history_path):
-        with open(history_path) as history_file:
-            lines = [line for line in history_file]
-            for line in lines[1:]:
-                data = line.strip().split(',')
-                try:
-                    data[0] = time.mktime(datetime.datetime.strptime(data[0], '%Y-%m-%d').timetuple()) * 1000
-                    for i in range(1, len(data), 1):
-                        data[i] = float(data[i])
-                    history_data.append(data)
-                except Exception, e:
-                    print e
-    history_data.reverse()
-    return history_data
 
 
 def get_season_data(code):
@@ -145,6 +137,42 @@ def get_season_increase(code):
             increase = 'none'
         season_increase.append((season, data[adj_close_index], increase))
     return season_increase
+
+
+def get_history_data(code):
+    history_data = []
+    history_path = './data/history/' + code
+    if os.path.isfile(history_path):
+        with open(history_path) as history_file:
+            lines = [line for line in history_file]
+            for line in lines[1:]:
+                data = line.strip().split(',')
+                try:
+                    data[0] = time.mktime(datetime.datetime.strptime(data[0], '%Y-%m-%d').timetuple()) * 1000
+                    for i in range(1, len(data), 1):
+                        data[i] = float(data[i])
+                    history_data.append(data)
+                except Exception, e:
+                    print e
+    history_data.reverse()
+    return history_data
+
+
+def cross_select(holding_date, ja='', jd='', sa='', sd='', qa='', qd=''):
+    ja, jd, sa, sd, qa, qd = to_float(ja, jd, sa, sd, qa, qd)
+    pass
+
+
+def to_float(*num):
+    ret = []
+    for n in num:
+        try:
+            n = float(n)
+        except Exception, e:
+            n = ''
+            print e
+        ret.append(n)
+    return ret
 
 
 class Holding(object):
@@ -242,4 +270,5 @@ class Holding(object):
 
 
 if __name__ == '__main__':
-    print get_season_increase('000002')
+    # print get_season_increase('000002')
+    print get_holding_dates()
