@@ -7605,7 +7605,7 @@ table thead tr th,
 table thead tr td,
 table tfoot tr th,
 table tfoot tr td {
-  padding: 8px 20px 8px 0px;
+  padding: 8px 17px 8px 0px;
   font-size: 0.8125em;
   color: white;
   text-align: left;
@@ -7613,7 +7613,7 @@ table tfoot tr td {
 /* line 59, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_tables.scss */
 table tr th,
 table tr td {
-  padding: 8px 20px 8px 0px;
+  padding: 8px 17px 8px 0px;
   font-size: 0.8125em;
   color: white;
 }
