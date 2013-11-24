@@ -467,7 +467,7 @@ button.large, .button.large {
   border-color: #333333 transparent transparent transparent;
 }
 
-/* line 1350, ../sass/_settings.scss */
+/* line 1352, ../sass/_settings.scss */
 .stock-selector {
   border-style: solid;
   border-width: 1px;
@@ -527,22 +527,22 @@ button.large, .button.large {
   border-color: white transparent transparent transparent;
 }
 
-/* line 1371, ../sass/_settings.scss */
+/* line 1373, ../sass/_settings.scss */
 .stock-sieve {
   text-align: center;
 }
 
-/* line 1375, ../sass/_settings.scss */
+/* line 1377, ../sass/_settings.scss */
 ::-webkit-input-placeholder {
   color: white;
 }
 
-/* line 1379, ../sass/_settings.scss */
+/* line 1381, ../sass/_settings.scss */
 [placeholder]:focus::-webkit-input-placeholder {
   color: transparent;
 }
 
-/* line 1384, ../sass/_settings.scss */
+/* line 1386, ../sass/_settings.scss */
 .stock-button {
   border-style: solid;
   border-width: 1px;
@@ -571,7 +571,7 @@ button.large, .button.large {
   padding-bottom: 0.5em;
 }
 
-/* line 1394, ../sass/_settings.scss */
+/* line 1396, ../sass/_settings.scss */
 .info {
   color: #2ba6cb;
 }
@@ -7605,7 +7605,7 @@ table thead tr th,
 table thead tr td,
 table tfoot tr th,
 table tfoot tr td {
-  padding: 0.5em 0.625em 0.625em;
+  padding: 8px 20px 8px 0px;
   font-size: 0.8125em;
   color: white;
   text-align: left;
@@ -7613,7 +7613,7 @@ table tfoot tr td {
 /* line 59, ../../../../../../var/lib/gems/1.9.1/gems/zurb-foundation-4.3.2/scss/foundation/components/_tables.scss */
 table tr th,
 table tr td {
-  padding: 0.5625em 0.625em;
+  padding: 8px 20px 8px 0px;
   font-size: 0.8125em;
   color: white;
 }

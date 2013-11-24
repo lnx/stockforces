@@ -54,6 +54,18 @@ def get_holding_dates(category='all'):
 
 
 def get_holding_data(category, holding_date, a='', d=''):
+
+    def to_float(*num):
+        ret = []
+        for n in num:
+            try:
+                n = float(n)
+            except Exception, e:
+                n = ''
+                print e
+            ret.append(n)
+        return ret
+    
     global holding_data_cache
     if category in holding_data_cache and holding_date in holding_data_cache[category]:
         a, d = to_float(a, d)
@@ -103,6 +115,7 @@ def get_season_data(code):
 
 
 def get_season_increase(code):
+    
     def get_season(input_datetime):
         if isinstance(input_datetime, datetime.datetime):
             if input_datetime.month in (1, 2, 3):
@@ -115,6 +128,7 @@ def get_season_increase(code):
                 return str(input_datetime.year) + '-4'
         else:
             return input_datetime
+    
     season_increase = []
     season_data = get_season_data(code)
     for i in range(len(season_data)):
@@ -159,20 +173,15 @@ def get_history_data(code):
 
 
 def cross_select(holding_date, ja='', jd='', sa='', sd='', qa='', qd=''):
-    ja, jd, sa, sd, qa, qd = to_float(ja, jd, sa, sd, qa, qd)
-    pass
-
-
-def to_float(*num):
-    ret = []
-    for n in num:
-        try:
-            n = float(n)
-        except Exception, e:
-            n = ''
-            print e
-        ret.append(n)
-    return ret
+    cross_ret = {}
+    condition = { 'jjzc' : [ja, jd], 'sbzc' : [sa, sd], 'qfii' : [qa, qd] }
+    for category in categories:
+        for holding in get_holding_data(category, holding_date, *condition[category]):
+            if holding.code not in cross_ret:
+                cross_ret[holding.code] = {}
+            cross_ret[holding.code][category] = holding
+    cross_ret = dict((key, value) for key, value in cross_ret.iteritems() if len(value) == 3)
+    return cross_ret
 
 
 class Holding(object):
@@ -267,8 +276,3 @@ class Holding(object):
 
     def __repr__(self):
         return self.__str__()
-
-
-if __name__ == '__main__':
-    # print get_season_increase('000002')
-    print get_holding_dates()

@@ -18,7 +18,7 @@
 	</div>
 	<div class="row">
 		<div class="large-12 columns" style="margin-top:-15px">
-			<p><small class="info">{{ holding_date }} | 基金A股比例 > {{ ja }} | 基金增减比例 > {{ jd }} | 社保A股比例 > {{ sa }} | 社保增减比例 > {{ sd }} | QFII A股比例 > {{ qa }} | QFII增减比例 > {{ qd }} | 168结果</small></p>
+			<p><small class="info">{{ holding_date }} | 基金A股比例 > {{ ja }} | 基金增减比例 > {{ jd }} | 社保A股比例 > {{ sa }} | 社保增减比例 > {{ sd }} | QFII A股比例 > {{ qa }} | QFII增减比例 > {{ qd }} | {{ cross_ret | length }}结果</small></p>
 		</div>
 		<div class="large-10 columns" style="min-height: 300px;">
 			<table>
@@ -37,6 +37,40 @@
 					</tr>
 				</thead>
 				<tbody>
+				{% for code in cross_ret %}
+					<tr>
+						<td rowspan="3" valign="top"><a href="/trend/{{ code }}/{{ cross_ret[code]['jjzc'].name }}" style="color: white; text-decoration: underline;">{{ code }}</a></td>
+						<td rowspan="3" valign="top">{{ cross_ret[code]['jjzc'].name }}</td>
+						<td>基金重仓</td>
+						<td>{{ cross_ret[code]['jjzc'].count }}</td>
+						<td>{{ cross_ret[code]['jjzc'].stock_num }}</td>
+						<td>{{ cross_ret[code]['jjzc'].a_percent }}</td>
+						<td>{{ cross_ret[code]['jjzc'].delta_num }}</td>
+						<td>{{ cross_ret[code]['jjzc'].percent }}</td>
+						<td>{{ cross_ret[code]['jjzc'].pre_count }}</td>
+						<td>{{ cross_ret[code]['jjzc'].delta_num_percent }}</td>
+					</tr>
+					<tr>
+						<td>社保重仓</td>
+						<td>{{ cross_ret[code]['sbzc'].count }}</td>
+						<td>{{ cross_ret[code]['sbzc'].stock_num }}</td>
+						<td>{{ cross_ret[code]['sbzc'].a_percent }}</td>
+						<td>{{ cross_ret[code]['sbzc'].delta_num }}</td>
+						<td>{{ cross_ret[code]['sbzc'].percent }}</td>
+						<td>{{ cross_ret[code]['sbzc'].pre_count }}</td>
+						<td>{{ cross_ret[code]['sbzc'].delta_num_percent }}</td>
+					</tr>
+					<tr>
+						<td>QFII重仓</td>
+						<td>{{ cross_ret[code]['qfii'].count }}</td>
+						<td>{{ cross_ret[code]['qfii'].stock_num }}</td>
+						<td>{{ cross_ret[code]['qfii'].a_percent }}</td>
+						<td>{{ cross_ret[code]['qfii'].delta_num }}</td>
+						<td>{{ cross_ret[code]['qfii'].percent }}</td>
+						<td>{{ cross_ret[code]['qfii'].pre_count }}</td>
+						<td>{{ cross_ret[code]['qfii'].delta_num_percent }}</td>
+					</tr>
+				{% endfor %}
 				</tbody>
 			</table>
 		</div>

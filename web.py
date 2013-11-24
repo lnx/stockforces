@@ -81,6 +81,7 @@ def advance():
 		sd='',
 		qa='',
 		qd='',
+		cross_ret=stock.cross_select(holding_date),
 		)
 
 
@@ -98,6 +99,7 @@ def advance_sieve(holding_date=''):
 		sd=sd,
 		qa=qa,
 		qd=qd,
+		cross_ret=stock.cross_select(holding_date, ja, jd, sa, sd, qa, qd),
 		)
 
 
