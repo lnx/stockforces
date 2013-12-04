@@ -20,7 +20,7 @@
 		<div class="large-12 columns" style="margin-top:-15px">
 			<p><small class="info">{{ holding_date }} | 基金A股比例 > {{ ja }} | 基金增减比例 > {{ jd }} | 社保A股比例 > {{ sa }} | 社保增减比例 > {{ sd }} | QFII A股比例 > {{ qa }} | QFII增减比例 > {{ qd }} | {{ cross_ret | length }}结果</small></p>
 		</div>
-		<div class="large-10 columns" style="min-height: 300px;">
+		<div class="large-10 columns" style="min-height: 400px;">
 			<table>
 				<thead>
 					<tr>
@@ -38,47 +38,31 @@
 				</thead>
 				<tbody>
 				{% for code in cross_ret %}
+					{% for category in cross_ret[code] %}
 					<tr>
-						<td rowspan="3" valign="top"><a href="/trend/{{ code }}/{{ cross_ret[code]['jjzc'].name }}" style="color: white; text-decoration: underline;">{{ code }}</a></td>
-						<td rowspan="3" valign="top">{{ cross_ret[code]['jjzc'].name }}</td>
-						<td>基金重仓</td>
-						<td>{{ cross_ret[code]['jjzc'].count }}</td>
-						<td>{{ cross_ret[code]['jjzc'].stock_num }}</td>
-						<td>{{ cross_ret[code]['jjzc'].a_percent }}</td>
-						<td>{{ cross_ret[code]['jjzc'].delta_num }}</td>
-						<td>{{ cross_ret[code]['jjzc'].percent }}</td>
-						<td>{{ cross_ret[code]['jjzc'].pre_count }}</td>
-						<td>{{ cross_ret[code]['jjzc'].delta_num_percent }}</td>
+						{% if cross_ret[code].keys().index(category) == 0 %}
+						<td rowspan="{{ jj + sb + qf }}" valign="top"><a href="/trend/{{ code }}/{{ cross_ret[code][category].name }}" style="color: white; text-decoration: underline;">{{ code }}</a></td>
+						<td rowspan="{{ jj + sb + qf }}" valign="top">{{ cross_ret[code][category].name }}</td>
+						{% endif %}
+						<td>{{ category_names[category] }}</td>
+						<td>{{ cross_ret[code][category].count }}</td>
+						<td>{{ cross_ret[code][category].stock_num }}</td>
+						<td>{{ cross_ret[code][category].a_percent }}</td>
+						<td>{{ cross_ret[code][category].delta_num }}</td>
+						<td>{{ cross_ret[code][category].percent }}</td>
+						<td>{{ cross_ret[code][category].pre_count }}</td>
+						<td>{{ cross_ret[code][category].delta_num_percent }}</td>
 					</tr>
-					<tr>
-						<td>社保重仓</td>
-						<td>{{ cross_ret[code]['sbzc'].count }}</td>
-						<td>{{ cross_ret[code]['sbzc'].stock_num }}</td>
-						<td>{{ cross_ret[code]['sbzc'].a_percent }}</td>
-						<td>{{ cross_ret[code]['sbzc'].delta_num }}</td>
-						<td>{{ cross_ret[code]['sbzc'].percent }}</td>
-						<td>{{ cross_ret[code]['sbzc'].pre_count }}</td>
-						<td>{{ cross_ret[code]['sbzc'].delta_num_percent }}</td>
-					</tr>
-					<tr>
-						<td>QFII重仓</td>
-						<td>{{ cross_ret[code]['qfii'].count }}</td>
-						<td>{{ cross_ret[code]['qfii'].stock_num }}</td>
-						<td>{{ cross_ret[code]['qfii'].a_percent }}</td>
-						<td>{{ cross_ret[code]['qfii'].delta_num }}</td>
-						<td>{{ cross_ret[code]['qfii'].percent }}</td>
-						<td>{{ cross_ret[code]['qfii'].pre_count }}</td>
-						<td>{{ cross_ret[code]['qfii'].delta_num_percent }}</td>
-					</tr>
+					{% endfor %}
 				{% endfor %}
 				</tbody>
 			</table>
 		</div>
 		<div class="large-2 columns">
-			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">时间选择</a>
+			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">{{ holding_date }}</a>
 			<ul id="date" class="f-dropdown" data-dropdown-content>
 			{% for hd in holding_dates %}
-				<li><a href="/{{category}}/{{hd}}">{{ hd }}</a></li>
+				<li><a href="/advance/{{hd}}?ja={{ja}}&jd={{jd}}&sa={{sa}}&sd={{sd}}&qa={{qa}}&qd={{qd}}{%if jj==1%}&jj=on{%endif%}{%if sb==1%}&sb=on{%endif%}{%if qf==1%}&qf=on{%endif%}">{{ hd }}</a></li>
 			{% endfor %}
 			</ul>
 		</div>
@@ -90,6 +74,14 @@
 				<input name="sd" value="{{sd}}" type="text" class="stock-sieve" placeholder="社保增减比例" />
 				<input name="qa" value="{{qa}}" type="text" class="stock-sieve" placeholder="QFII A股比例" />
 				<input name="qd" value="{{qd}}" type="text" class="stock-sieve" placeholder="QFII增减比例" />
+			</div>
+			<div class="large-2 columns">
+				<input id="jj" name="jj" type="checkbox" {% if jj == 1 %} checked="checked" {% endif %} />
+				<label for="jj">基金</label>
+				<input id="sb" name="sb" type="checkbox" {% if sb == 1 %} checked="checked" {% endif %} />
+				<label for="sb">社保</label>
+				<input id="qf" name="qf" type="checkbox" {% if qf == 1 %} checked="checked" {% endif %} />
+				<label for="qf">QFII</label>
 			</div>
 		</form>
 		<div class="large-2 columns">

@@ -73,6 +73,7 @@ def advance():
 	holding_date = holding_dates[0]
 	return render_template(
 		'advance.html',
+		category_names=stock.category_names,
 		holding_dates=holding_dates,
 		holding_date=holding_date,
 		ja='',
@@ -81,6 +82,9 @@ def advance():
 		sd='',
 		qa='',
 		qd='',
+		jj=1,
+		sb=1,
+		qf=1,
 		cross_ret=stock.cross_select(holding_date),
 		)
 
@@ -88,9 +92,13 @@ def advance():
 @app.route('/advance/<holding_date>')
 def advance_sieve(holding_date=''):
 	holding_dates = stock.get_holding_dates()
-	ja, jd, sa, sd, qa, qd = parse_request('ja', 'jd', 'sa', 'sd', 'qa', 'qd')
+	ja, jd, sa, sd, qa, qd, jj, sb, qf = parse_request('ja', 'jd', 'sa', 'sd', 'qa', 'qd', 'jj', 'sb', 'qf')
+	jj = 1 if jj == 'on' else 0
+	sb = 1 if sb == 'on' else 0
+	qf = 1 if qf == 'on' else 0
 	return render_template(
 		'advance.html',
+		category_names=stock.category_names,
 		holding_dates=holding_dates,
 		holding_date=holding_date,
 		ja=ja,
@@ -99,7 +107,10 @@ def advance_sieve(holding_date=''):
 		sd=sd,
 		qa=qa,
 		qd=qd,
-		cross_ret=stock.cross_select(holding_date, ja, jd, sa, sd, qa, qd),
+		jj=jj,
+		sb=sb,
+		qf=qf,
+		cross_ret=stock.cross_select(holding_date, ja, jd, sa, sd, qa, qd, jj, sb, qf),
 		)
 
 

@@ -1370,6 +1370,16 @@ $input-border-color: #2284a1;
 $input-focus-bg-color: #333;
 $input-focus-border-color: #2284a1;
 
+input[type="checkbox"] + label {
+  display: inline-block;
+  margin-left: -0.1rem;
+  margin-right: 0.3rem;
+  margin-bottom: 0;
+  vertical-align: baseline;
+  font-size: 0.7em;
+  color: #2ba6cb;
+}
+
 .stock-sieve {
   text-align: center;
 }

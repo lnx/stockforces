@@ -172,15 +172,16 @@ def get_history_data(code):
     return history_data
 
 
-def cross_select(holding_date, ja='', jd='', sa='', sd='', qa='', qd=''):
+def cross_select(holding_date, ja='', jd='', sa='', sd='', qa='', qd='', jj=1, sb=1, qf=1):
     cross_ret = {}
-    condition = { 'jjzc' : [ja, jd], 'sbzc' : [sa, sd], 'qfii' : [qa, qd] }
+    condition = { 'jjzc' : [ja, jd, jj], 'sbzc' : [sa, sd, sb], 'qfii' : [qa, qd, qf] }
     for category in categories:
-        for holding in get_holding_data(category, holding_date, *condition[category]):
-            if holding.code not in cross_ret:
-                cross_ret[holding.code] = {}
-            cross_ret[holding.code][category] = holding
-    cross_ret = dict((key, value) for key, value in cross_ret.iteritems() if len(value) == 3)
+        if condition[category][2] == 1:
+            for holding in get_holding_data(category, holding_date, condition[category][0], condition[category][1]):
+                if holding.code not in cross_ret:
+                    cross_ret[holding.code] = {}
+                cross_ret[holding.code][category] = holding
+    cross_ret = dict((key, value) for key, value in cross_ret.iteritems() if len(value) == (jj + sb + qf))
     return cross_ret
 
 
@@ -203,7 +204,7 @@ class Holding(object):
                     self._pre_count = float(parts[8])
                     pre_stock_num = self.stock_num - self.delta_num
                     if pre_stock_num > 0:
-                        self._delta_num_percent = '%.2f' % (self.delta_num / pre_stock_num)
+                        self._delta_num_percent = '%.2f' % (100 * self.delta_num / pre_stock_num)
                     else:
                         self._delta_num_percent = u'新进'
                     fmt_ok = True

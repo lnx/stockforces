@@ -20,7 +20,7 @@
 		<div class="large-12 columns" style="margin-top:-15px">
 			<p><small class="info">{{ category_names[category] }} | {{ holding_date }} | A股比例 > {{a}} | 增减比例 > {{d}} | {{ holding_list | length }}结果</small></p>
 		</div>
-		<div class="large-10 columns" style="min-height: 300px;">
+		<div class="large-10 columns" style="min-height: 400px;">
 			<table>
 				<thead>
 					<tr>
@@ -55,13 +55,13 @@
 			</table>
 		</div>
 		<div class="large-2 columns">
-			<a href="#" class="stock-selector" data-dropdown="org" data-options="is_hover:true">机构持股</a>
+			<a href="#" class="stock-selector" data-dropdown="org" data-options="is_hover:true">{{ category_names[category] }}</a>
 			<ul id="org" class="f-dropdown" data-dropdown-content>
 			{% for cur_category in category_names %}
 				<li><a href="/holding/{{cur_category}}/{{holding_date}}">{{ category_names[cur_category] }}</a></li>
 			{% endfor %}
 			</ul>
-			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">时间选择</a>
+			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">{{ holding_date }}</a>
 			<ul id="date" class="f-dropdown" data-dropdown-content>
 			{% for hd in holding_dates %}
 				<li><a href="/holding/{{ category }}/{{ hd }}">{{ hd }}</a></li>
