@@ -7,6 +7,7 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from flask import render_template
+from flask import Response
 
 from bs4 import BeautifulSoup
 
@@ -76,15 +77,15 @@ def advance():
 		category_names=stock.category_names,
 		holding_dates=holding_dates,
 		holding_date=holding_date,
+		jj=1,
+		sb=1,
+		qf=1,
 		ja='',
 		jd='',
 		sa='',
 		sd='',
 		qa='',
 		qd='',
-		jj=1,
-		sb=1,
-		qf=1,
 		cross_ret=stock.cross_select(holding_date),
 		)
 
@@ -92,26 +93,46 @@ def advance():
 @app.route('/advance/<holding_date>')
 def advance_sieve(holding_date=''):
 	holding_dates = stock.get_holding_dates()
-	ja, jd, sa, sd, qa, qd, jj, sb, qf = parse_request('ja', 'jd', 'sa', 'sd', 'qa', 'qd', 'jj', 'sb', 'qf')
-	jj = 1 if jj == 'on' else 0
-	sb = 1 if sb == 'on' else 0
-	qf = 1 if qf == 'on' else 0
+	jj, sb, qf, ja, jd, sa, sd, qa, qd = parse_request('jj', 'sb', 'qf', 'ja', 'jd', 'sa', 'sd', 'qa', 'qd')
+	jj, sb, qf = parse_checkbox(jj, sb, qf)
 	return render_template(
 		'advance.html',
 		category_names=stock.category_names,
 		holding_dates=holding_dates,
 		holding_date=holding_date,
+		jj=jj,
+		sb=sb,
+		qf=qf,
 		ja=ja,
 		jd=jd,
 		sa=sa,
 		sd=sd,
 		qa=qa,
 		qd=qd,
-		jj=jj,
-		sb=sb,
-		qf=qf,
-		cross_ret=stock.cross_select(holding_date, ja, jd, sa, sd, qa, qd, jj, sb, qf),
+		cross_ret=stock.cross_select(holding_date, jj, sb, qf, ja, jd, sa, sd, qa, qd),
 		)
+
+
+@app.route('/download/<download_type>')
+def download(download_type=''):
+
+	def generate(holding_list):
+		for holding in holding_list:
+			yield holding.get_line() + '\n'
+	
+	holding_list = []
+	if download_type == 'single':
+		holding_list = stock.get_holding_data(*parse_request('category', 'holding_date', 'a', 'd'))
+	elif download_type == 'multiple':
+		params = parse_request('holding_date', 'jj', 'sb', 'qf', 'ja', 'jd', 'sa', 'sd', 'qa', 'qd')
+		params = params[:1] + parse_checkbox(*params[1:4]) + params[4:]
+		cross_ret = stock.cross_select(*params)
+		for code in cross_ret:
+			for category in cross_ret[code]:
+				holding_list.append(cross_ret[code][category])
+	response = Response(generate(holding_list), mimetype='text/csv')
+	response.headers['Content-Disposition'] = 'attachment; filename=stockforces.csv'
+	return response
 
 
 def parse_request(*params):
@@ -122,6 +143,14 @@ def parse_request(*params):
 	return ret
 
 
+def parse_checkbox(*params):
+    ret = []
+    for p in params:
+        v = 1 if p == 'on' or p == '1' else 0
+        ret.append(v)
+    return ret
+
+
 if __name__ == '__main__':
 	stock.load_holding_data()
-	app.run(debug=True)
+	app.run()

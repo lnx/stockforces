@@ -172,12 +172,12 @@ def get_history_data(code):
     return history_data
 
 
-def cross_select(holding_date, ja='', jd='', sa='', sd='', qa='', qd='', jj=1, sb=1, qf=1):
+def cross_select(holding_date, jj=1, sb=1, qf=1, ja='', jd='', sa='', sd='', qa='', qd=''):
     cross_ret = {}
-    condition = { 'jjzc' : [ja, jd, jj], 'sbzc' : [sa, sd, sb], 'qfii' : [qa, qd, qf] }
+    condition = { 'jjzc' : [jj, ja, jd], 'sbzc' : [sb, sa, sd], 'qfii' : [qf, qa, qd] }
     for category in categories:
-        if condition[category][2] == 1:
-            for holding in get_holding_data(category, holding_date, condition[category][0], condition[category][1]):
+        if condition[category][0] == 1:
+            for holding in get_holding_data(category, holding_date, condition[category][1], condition[category][2]):
                 if holding.code not in cross_ret:
                     cross_ret[holding.code] = {}
                 cross_ret[holding.code][category] = holding
@@ -261,6 +261,18 @@ class Holding(object):
     @property
     def delta_num_percent(self):
         return self._delta_num_percent
+
+    def get_line(self):
+        ret = self.code.encode('utf-8')
+        ret += ',' + self.name.encode('utf-8')
+        ret += ',' + self.date.encode('utf-8')
+        ret += ',' + str(self.count)
+        ret += ',' + str(self.stock_num)
+        ret += ',' + str(self.a_percent)
+        ret += ',' + str(self.delta_num)
+        ret += ',' + str(self.percent)
+        ret += ',' + str(self.pre_count)
+        return ret
 
     def __str__(self):
         ret = ''

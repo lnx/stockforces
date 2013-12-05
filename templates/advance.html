@@ -62,19 +62,11 @@
 			<a href="#" class="stock-selector" data-dropdown="date" data-options="is_hover:true">{{ holding_date }}</a>
 			<ul id="date" class="f-dropdown" data-dropdown-content>
 			{% for hd in holding_dates %}
-				<li><a href="/advance/{{hd}}?ja={{ja}}&jd={{jd}}&sa={{sa}}&sd={{sd}}&qa={{qa}}&qd={{qd}}{%if jj==1%}&jj=on{%endif%}{%if sb==1%}&sb=on{%endif%}{%if qf==1%}&qf=on{%endif%}">{{ hd }}</a></li>
+				<li><a href="/advance/{{hd}}?jj={{jj}}&sb={{sb}}&qf={{qf}}&ja={{ja}}&jd={{jd}}&sa={{sa}}&sd={{sd}}&qa={{qa}}&qd={{qd}}">{{ hd }}</a></li>
 			{% endfor %}
 			</ul>
 		</div>
 		<form id="sieve" action="/advance/{{holding_date}}">
-			<div class="large-2 columns">
-				<input name="ja" value="{{ja}}" type="text" class="stock-sieve" placeholder="基金A股比例" />
-				<input name="jd" value="{{jd}}" type="text" class="stock-sieve" placeholder="基金增减比例" />
-				<input name="sa" value="{{sa}}" type="text" class="stock-sieve" placeholder="社保A股比例" />
-				<input name="sd" value="{{sd}}" type="text" class="stock-sieve" placeholder="社保增减比例" />
-				<input name="qa" value="{{qa}}" type="text" class="stock-sieve" placeholder="QFII A股比例" />
-				<input name="qd" value="{{qd}}" type="text" class="stock-sieve" placeholder="QFII增减比例" />
-			</div>
 			<div class="large-2 columns">
 				<input id="jj" name="jj" type="checkbox" {% if jj == 1 %} checked="checked" {% endif %} />
 				<label for="jj">基金</label>
@@ -83,9 +75,18 @@
 				<input id="qf" name="qf" type="checkbox" {% if qf == 1 %} checked="checked" {% endif %} />
 				<label for="qf">QFII</label>
 			</div>
+			<div class="large-2 columns">
+				<input name="ja" value="{{ja}}" type="text" class="stock-sieve" placeholder="基金A股比例" />
+				<input name="jd" value="{{jd}}" type="text" class="stock-sieve" placeholder="基金增减比例" />
+				<input name="sa" value="{{sa}}" type="text" class="stock-sieve" placeholder="社保A股比例" />
+				<input name="sd" value="{{sd}}" type="text" class="stock-sieve" placeholder="社保增减比例" />
+				<input name="qa" value="{{qa}}" type="text" class="stock-sieve" placeholder="QFII A股比例" />
+				<input name="qd" value="{{qd}}" type="text" class="stock-sieve" placeholder="QFII增减比例" />
+			</div>
 		</form>
 		<div class="large-2 columns">
 			<a href="javascript:$('#sieve').submit();" class="stock-button">筛选</a>
+			<a href="/download/multiple?holding_date={{holding_date}}&jj={{jj}}&sb={{sb}}&qf={{qf}}&ja={{ja}}&jd={{jd}}&sa={{sa}}&sd={{sd}}&qa={{qa}}&qd={{qd}}" class="stock-button">导出</a>
 		</div>
 	</div>
 	<div class="row">
